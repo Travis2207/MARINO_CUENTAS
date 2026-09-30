@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Acceso a Cuentas Marino">
+	<title>Iniciar sesión | Cuentas Marino</title>
+	<link rel="icon" href="../img/IconSinfondo.png">
+	<link rel="stylesheet" href="../body/style.css">
+	<link rel="stylesheet" href="./login.css">
+	<script src="../js/login.js"></script>
+</head>
+<body class="login-body">
+	<main class="login-page">
+		<div class="login-layout">
+			<section class="login-brand" aria-label="Cuentas Marino">
+				<img class="login-logo" src="../img/IconSinfondo.png" alt="Logo de Cuentas Marino">
+				<div>
+					<p class="etiqueta">Administración del negocio</p>
+					<h1>Cuentas Marino</h1>
+					<p class="brand-note">Acceso privado para administrar las cuentas del Marino Sport Book.</p>
+				</div>
+				<p class="brand-footnote">Control semanal · Cuentas Marino</p>
+			</section>
+
+			<section class="login-form-panel" aria-labelledby="login-title">
+				<h2 id="login-title">Iniciar sesión</h2>
+				<p class="form-intro">Ingresa tus datos para continuar.</p>
+
+				<form class="login-form" id="login-form">
+					<div class="login-field">
+						<label for="usuario">Nombre de usuario</label>
+						<input id="usuario" name="usuario" type="text" autocomplete="username" required>
+					</div>
+					<div class="login-field">
+						<label for="contrasena">Contraseña</label>
+						<input id="contrasena" name="contrasena" type="password" autocomplete="current-password" required>
+					</div>
+					<div class="login-field">
+						<label for="nombre">Nombre</label>
+						<input id="nombre" name="nombre" type="text" autocomplete="name" required>
+					</div>
+					<button class="login-submit" type="submit">Entrar</button>
+					<p class="login-status" id="login-status" role="status" aria-live="polite"></p>
+				</form>
+
+				<div class="support-block">
+					<p>Si cuentas con algún problema, contacta con soporte.</p>
+					<a class="support-button" href="mailto:?subject=Soporte%20Cuentas%20Marino">Contactar soporte</a>
+				</div>
+			</section>
+		</div>
+	</main>
+</body>
+</html>

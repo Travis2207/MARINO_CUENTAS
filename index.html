@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Control semanal de cuentas para el negocio Marino">
+    <title>Cuentas Marino | Control semanal</title>
+    <link rel="icon" href="./img/IconSinfondo.png">
+    <link rel="stylesheet" href="./body/style.css">
+    <link rel="login" href="./body/login.css" >
+    <link rel="login.web" href="./client/login.html" >
+    <link rel="js" href="./js/app.js" >
+</head>
+<body>
+    <main class="pagina">
+        <button class="boton-lista-usuarios" id="abrir-usuarios" type="button" hidden>Lista de usuarios</button>
+        <button class="enlace-login" id="cerrar-sesion" type="button">Cerrar sesión</button>
+        <header class="encabezado">
+            <div class="marca">
+                <img src="./img/IconSinfondo.png" alt="Logo de Cuentas Marino">
+                <div>
+                    <p class="etiqueta">Administración del negocio</p>
+                    <h1>Cuentas Marino</h1>
+                </div>
+            </div>
+            <p class="fecha">Resumen semanal<br><strong>Semana actual</strong></p>
+        </header>
+
+        <section class="selector-sedes" id="selector-sedes" aria-labelledby="titulo-sedes">
+            <p class="etiqueta">Acceso por ubicación</p>
+            <h2 id="titulo-sedes">Selecciona una sede</h2>
+            <p class="ayuda">Elige la sede que deseas administrar para abrir sus cuentas.</p>
+            <div class="opciones-sedes">
+                <button class="sede-opcion" type="button" data-sede="Naguanagua">
+                    <span class="sede-numero">01</span>
+                    <span class="sede-nombre">Sede Naguanagua</span>
+                    <span class="sede-flecha" aria-hidden="true">&rarr;</span>
+                </button>
+                <button class="sede-opcion" type="button" data-sede="Coro">
+                    <span class="sede-numero">02</span>
+                    <span class="sede-nombre">Sede Coro</span>
+                    <span class="sede-flecha" aria-hidden="true">&rarr;</span>
+                </button>
+            </div>
+        </section>
+
+        <div class="panel-cuentas" id="panel-cuentas" hidden>
+            <div class="bienvenida-sede">
+                <div>
+                    <p class="etiqueta">Panel de cuentas</p>
+                    <h1 id="bienvenida-titulo">Bienvenido a la sede</h1>
+                </div>
+                <div class="acciones-sede">
+                    <button class="reiniciar-cuentas" id="reiniciar-cuentas" type="button">Reiniciar cuentas</button>
+                    <button class="cambiar-sede" id="cambiar-sede" type="button">Cambiar sede</button>
+                </div>
+            </div>
+
+        <section class="resumen" aria-label="Resumen de cuentas">
+            <div class="selector-semana" role="group" aria-label="Seleccionar semana">
+                <button class="boton-semana" type="button" data-semana="pasada">Semana pasada</button>
+                <button class="boton-semana activo" type="button" data-semana="actual">Semana actual</button>
+                <p id="periodo-semana" class="periodo-semana">Semana actual</p>
+            </div>
+            <article class="tarjeta tarjeta-principal">
+                <span class="dato" id="etiqueta-balance">Balance Actual</span>
+                <strong id="balance-semana">
+                    <span id="balance-principal">$ 0.00</span>
+                    <button id="cambiar-moneda-balance" class="cambiar-moneda-balance" type="button" aria-label="Mostrar balance en bolívares">Bs</button>
+                    <small id="balance-secundario">Bs 0.00</small>
+                </strong>
+            </article>
+            <article class="tarjeta">
+                <span class="dato" id="etiqueta-ingresos">Ingresos Actuales</span>
+                <strong id="ingresos-semana">$ 0.00<small>Bs 0.00</small></strong>
+            </article>
+            <article class="tarjeta">
+                <span class="dato" id="etiqueta-gastos">Gastos Actuales</span>
+                <strong id="gastos-semana">$ 0.00<small>Bs 0.00</small></strong>
+            </article>
+        </section>
+
+        <section id="grafico-semanal" aria-labelledby="titulo-grafico-semanal">
+            <div class="grafico-encabezado">
+                <div>
+                    <h2 id="titulo-grafico-semanal">Ingresos y gastos por día</h2>
+                    <p id="periodo-grafico" class="ayuda">Semana actual</p>
+                </div>
+                <div class="grafico-selector-moneda" role="group" aria-label="Moneda de la gráfica">
+                    <button class="moneda-grafico activa" type="button" data-moneda-grafico="USD" aria-pressed="true">$ USD</button>
+                    <button class="moneda-grafico" type="button" data-moneda-grafico="Bs" aria-pressed="false">Bs</button>
+                </div>
+            </div>
+            <div class="grafico-leyenda" aria-hidden="true">
+                <span><i class="muestra-ingresos"></i>Ingresos</span>
+                <span><i class="muestra-gastos"></i>Gastos</span>
+            </div>
+            <div class="grafico-desplazamiento">
+                <div class="grafico-plot">
+                    <div class="grafico-eje" aria-hidden="true">
+                        <span id="grafico-escala-maxima">0</span>
+                        <span id="grafico-escala-media">0</span>
+                        <span>0</span>
+                    </div>
+                    <div id="grafico-columnas" class="grafico-columnas" role="group" aria-label="Comparación diaria de ingresos y gastos">
+                        <p>Selecciona una sede para ver sus movimientos.</p>
+                    </div>
+                </div>
+            </div>
+            <p id="resumen-grafico" class="resumen-grafico" aria-live="polite"></p>
+        </section>
+
+        <section id="configuracion-tasa" aria-labelledby="titulo-configuracion-tasa">
+            <div class="seccion-titulo">
+                <h2 id="titulo-configuracion-tasa">Tasa de cambio diaria</h2>
+            </div>
+            <form id="formulario-tasa" class="formulario-tasa">
+                <div class="campo-tasa">
+                    <label for="fecha-tasa">Fecha de vigencia</label>
+                    <input id="fecha-tasa" name="fecha" type="date" required>
+                </div>
+                <div class="campo-tasa">
+                    <label for="valor-tasa">Bolívares por 1 USD</label>
+                    <input id="valor-tasa" name="tasa" type="number" min="0.000001" step="any" placeholder="Ejemplo: 36.50" required>
+                </div>
+                <button type="submit">Guardar tasa</button>
+            </form>
+            <p id="estado-tasa" class="estado-tasa" role="status" aria-live="polite"></p>
+        </section>
+
+        <section id="nuevo-movimiento" aria-labelledby="titulo-nuevo-movimiento">
+            <div class="seccion-titulo">
+                <h2 id="titulo-nuevo-movimiento">Nuevo movimiento</h2>
+                <p class="ayuda">Registra una operación de la sede seleccionada.</p>
+            </div>
+
+            <form id="formulario-movimiento" class="formulario-movimiento">
+                <fieldset>
+                    <div class="campo-movimiento">
+                        <label for="fecha-movimiento">Fecha del movimiento</label>
+                        <input id="fecha-movimiento" name="fecha" type="date" required>
+                    </div>
+
+                    <div class="campo-movimiento">
+                        <label for="tipo-movimiento">Tipo de movimiento</label>
+                        <select id="tipo-movimiento" name="tipo" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="ingreso">Ingreso</option>
+                            <option value="gasto">Gasto</option>
+                            <option value="transferencia">Transferencia</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-movimiento">
+                        <label for="moneda-movimiento">Seleccionar moneda</label>
+                        <select id="moneda-movimiento" name="moneda" required>
+                            <option value="">Seleccionar moneda</option>
+                            <option value="USD">$ Dólares</option>
+                            <option value="Bs">Bs Bolívares</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-movimiento">
+                        <label for="metodo-movimiento">Método de Pago / Canal</label>
+                        <select id="metodo-movimiento" name="metodo" required>
+                            <option value="">Selecciona un método</option>
+                            <option value="efectivo-usd">Efectivo USD</option>
+                            <option value="efectivo-bs">Efectivo Bs</option>
+                            <option value="zelle">Zelle</option>
+                            <option value="pago-movil">Pago Móvil</option>
+                            <option value="punto-venta">Punto de Venta</option>
+                            <option value="binance">Binance</option>
+                            <option value="bio-pago">Bíopago</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-movimiento campo-destino" id="campo-metodo-destino" hidden>
+                        <label for="metodo-destino">Canal destino de la transferencia</label>
+                        <select id="metodo-destino" name="metodoDestino">
+                            <option value="">Selecciona un canal destino</option>
+                            <option value="efectivo-usd">Efectivo USD</option>
+                            <option value="efectivo-bs">Efectivo Bs</option>
+                            <option value="zelle">Zelle</option>
+                            <option value="pago-movil">Pago Móvil</option>
+                            <option value="punto-venta">Punto de Venta</option>
+                            <option value="binance">Binance</option>
+                            <option value="bio-pago">Bio Pago</option>
+                        </select>
+                    </div>
+
+                    <div class="campo-movimiento campo-concepto">
+                        <label for="concepto-movimiento">Concepto</label>
+                        <input id="concepto-movimiento" name="concepto" type="text" placeholder="Ejemplo: venta del día" required>
+                    </div>
+
+                    <div class="campo-movimiento">
+                        <label for="monto-movimiento">Monto</label>
+                        <input id="monto-movimiento" name="monto" type="number" min="0" step="0.01" placeholder="0.00" required>
+                    </div>
+
+                    <button type="submit">Guardar movimiento</button>
+                </fieldset>
+                <p id="estado-conversion" class="estado-conversion" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <section id="movimientos-recientes" aria-labelledby="titulo-movimientos-recientes">
+            <div class="seccion-titulo">
+                <h2 id="titulo-movimientos-recientes">Movimientos recientes</h2>
+                <p class="ayuda">Consulta las operaciones registradas en esta sede.</p>
+            </div>
+
+            <div class="filtros-movimientos">
+                <div class="filtro-tipo-movimiento">
+                    <label for="filtro-tipo">Filtrar por tipo</label>
+                    <div class="select-tipo-wrap">
+                        <select id="filtro-tipo" name="filtro-tipo">
+                            <option value="todos">Todos los movimientos</option>
+                            <option value="ingresos">Solo ingresos</option>
+                            <option value="gastos">Solo gastos</option>
+                            <option value="transferencias">Solo transferencias</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="selector-fecha">
+                    <label for="abrir-calendario">Buscar por fecha</label>
+                    <div class="controles-fecha">
+                        <button class="boton-abrir-calendario" id="abrir-calendario" type="button" aria-expanded="false" aria-controls="calendario-fecha">
+                            <span id="fecha-elegida">Seleccionar fecha</span>
+                            <span aria-hidden="true">▦</span>
+                        </button>
+                        <button class="limpiar-fecha" id="limpiar-fecha" type="button" aria-label="Quitar filtro de fecha" hidden>&times;</button>
+                    </div>
+                    <div class="calendario-fecha" id="calendario-fecha" role="dialog" aria-label="Seleccionar fecha" hidden>
+                        <div class="calendario-cabecera">
+                            <button class="cambiar-mes" id="mes-anterior" type="button" aria-label="Mes anterior">&lsaquo;</button>
+                            <select id="mes-calendario" aria-label="Seleccionar mes">
+                                <option value="0">Enero</option>
+                                <option value="1">Febrero</option>
+                                <option value="2">Marzo</option>
+                                <option value="3">Abril</option>
+                                <option value="4">Mayo</option>
+                                <option value="5">Junio</option>
+                                <option value="6">Julio</option>
+                                <option value="7">Agosto</option>
+                                <option value="8">Septiembre</option>
+                                <option value="9">Octubre</option>
+                                <option value="10">Noviembre</option>
+                                <option value="11">Diciembre</option>
+                            </select>
+                            <input id="ano-calendario" type="number" min="1900" max="2100" aria-label="Año">
+                            <button class="cambiar-mes" id="mes-siguiente" type="button" aria-label="Mes siguiente">&rsaquo;</button>
+                        </div>
+                        <div class="calendario-dias-semana" aria-hidden="true">
+                            <span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span>
+                        </div>
+                        <div class="calendario-dias" id="dias-calendario"></div>
+                    </div>
+                </div>
+                <button class="aplicar-filtros" id="aplicar-filtros" type="button">
+                    <span aria-hidden="true">&#10003;</span>Aplicar filtros
+                </button>
+            </div>
+
+            <table>
+                <caption>Últimos movimientos registrados</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Concepto</th>
+                        <th scope="col">Método / canal</th>
+                        <th scope="col">Monto / equivalente</th>
+                        <th scope="col">Moneda</th>
+                        <th scope="col">Responsable</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="movimientos-recientes-cuerpo">
+                    <tr>
+                        <td colspan="8">Todavía no hay movimientos registrados.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="cierre-caja" aria-labelledby="titulo-cierre-caja">
+            <div class="seccion-titulo">
+                <h2 id="titulo-cierre-caja">Arqueo diario por método de pago</h2>
+                <p class="ayuda">Registra la apertura y el efectivo o saldo digital contado para comparar con lo esperado.</p>
+            </div>
+            <div class="selector-fecha-cierre">
+                <label for="fecha-cierre">Fecha del cierre</label>
+                <input id="fecha-cierre" type="date" required>
+            </div>
+            <table class="tabla-cierre">
+                <caption>Saldos en su moneda original. Las transferencias mueven saldo entre canales.</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Método / canal</th>
+                        <th scope="col">Apertura ($ / Bs)</th>
+                        <th scope="col">Ingresos ($ / Bs)</th>
+                        <th scope="col">Gastos ($ / Bs)</th>
+                        <th scope="col">Transferencias ($ / Bs)</th>
+                        <th scope="col">Esperado ($ / Bs)</th>
+                        <th scope="col">Contado ($ / Bs)</th>
+                        <th scope="col">Diferencia ($ / Bs)</th>
+                    </tr>
+                </thead>
+                <tbody id="cierre-caja-cuerpo">
+                    <tr><td colspan="8">Selecciona una sede para ver el cierre diario.</td></tr>
+                </tbody>
+            </table>
+            <button id="guardar-cierre" class="guardar-cierre" type="button">Guardar arqueo del día</button>
+            <p id="estado-cierre" class="estado-cierre" role="status" aria-live="polite"></p>
+        </section>
+
+        <section id="datos-guardados" aria-labelledby="titulo-datos-guardados">
+            <h2 id="titulo-datos-guardados">Datos guardados</h2>
+            <table>
+                <caption>Registros de la semana actual</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Día</th>
+                        <th scope="col">Ingresos USD</th>
+                        <th scope="col">Ingresos Bs</th>
+                        <th scope="col">Gastos USD</th>
+                        <th scope="col">Gastos Bs</th>
+                        <th scope="col">Notas</th>
+                    </tr>
+                </thead>
+                <tbody id="datos-guardados-cuerpo">
+                    <tr><td colspan="6">Selecciona un día para ver sus datos.</td></tr>
+                </tbody>
+            </table>
+            <div class="detalle-dia-guardado" id="detalle-dia-guardado" aria-live="polite" hidden>
+                <p class="etiqueta">Detalle del día</p>
+                <h3 id="titulo-detalle-dia">Selecciona un día</h3>
+                <p id="estado-detalle-dia">Aquí aparecerán los movimientos guardados.</p>
+                <ul id="lista-detalle-dia"></ul>
+            </div>
+        </section>
+
+        <section id="resultado-semana" aria-labelledby="titulo-resultado-semana">
+            <h2 id="titulo-resultado-semana">Resultado de la semana</h2>
+            <p id="estado-semana" class="estado-semana">Sin movimientos registrados</p>
+            <dl>
+                <dt id="resultado-etiqueta-bs">Total de la semana en Bs</dt>
+                <dd id="resultado-bs">Bs 0.00</dd>
+                <dt id="resultado-etiqueta-usd">Total de la semana en $</dt>
+                <dd id="resultado-usd">$ 0.00</dd>
+            </dl>
+        </section>
+
+        </div>
+        <dialog class="dialogo-usuarios" id="dialogo-usuarios" aria-labelledby="titulo-dialogo-usuarios">
+            <div class="dialogo-usuarios-contenido">
+                <header class="dialogo-usuarios-cabecera">
+                    <div>
+                        <p class="etiqueta">Administración</p>
+                        <h2 id="titulo-dialogo-usuarios">Lista de usuarios</h2>
+                    </div>
+                    <button id="cerrar-dialogo-usuarios" class="cerrar-dialogo-usuarios" type="button" aria-label="Cerrar lista de usuarios">&times;</button>
+                </header>
+                <p id="estado-lista-usuarios" class="estado-lista-usuarios" role="status" aria-live="polite"></p>
+                <div class="usuarios-admin-grid">
+                    <section class="usuarios-disponibles" aria-labelledby="titulo-usuarios-disponibles">
+                        <h3 id="titulo-usuarios-disponibles">Usuarios registrados</h3>
+                        <div id="lista-usuarios" class="lista-usuarios"></div>
+                    </section>
+                    <section id="detalle-usuario-admin" class="detalle-usuario-admin" aria-labelledby="nombre-usuario-admin" hidden>
+                        <h3 id="nombre-usuario-admin">Usuario</h3>
+                        <p id="rol-usuario-admin" class="rol-usuario-admin"></p>
+                        <p id="ip-usuario-admin" class="rol-usuario-admin">IP reciente: disponible solo al conectar con el backend.</p>
+                        <div class="control-rol-usuario">
+                            <label for="rol-seleccionado">Rol del usuario</label>
+                            <select id="rol-seleccionado">
+                                <option value="cajero">Cajero</option>
+                                <option value="administrador">Administrador / Gerente</option>
+                            </select>
+                            <button id="guardar-rol-usuario" type="button">Guardar rol</button>
+                        </div>
+                        <div class="acciones-usuario-admin">
+                            <button id="bloquear-usuario" type="button">Bloquear usuario</button>
+                            <button id="revisar-transacciones" type="button">Revisar transacciones</button>
+                        </div>
+                        <div id="transacciones-usuario" class="panel-revision-usuario" hidden>
+                            <h4>Movimientos registrados</h4>
+                            <div class="tabla-auditoria-desplazable">
+                                <table>
+                                    <thead><tr><th>Fecha</th><th>Tipo</th><th>Concepto</th><th>Monto</th><th>Sede</th></tr></thead>
+                                    <tbody id="transacciones-usuario-cuerpo"></tbody>
+                                </table>
+                            </div>
+                            <h4>Bitácora de actividad</h4>
+                            <div class="tabla-auditoria-desplazable">
+                                <table>
+                                    <thead><tr><th>Hora</th><th>Acción</th><th>Detalle</th><th>IP</th></tr></thead>
+                                    <tbody id="bitacora-usuario-cuerpo"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </dialog>
+    </main>
+    <script src="./js/backend.js"></script>
+    <script src="./js/login.js"></script>
+    <script src="./js/funciones.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>
